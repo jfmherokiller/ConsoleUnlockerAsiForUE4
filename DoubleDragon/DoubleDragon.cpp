@@ -4,16 +4,11 @@
 #include "pch.h"
 #include "framework.h"
 #include "DoubleDragon.h"
-#include <cstdint>
-#include <iostream>
 #include "MemoryModule.h"
-#include <tchar.h>
-#include <cassert>
 #include <string>
 #include <pathcch.h>
 #include <filesystem>
 #include <fstream>
-#include "cool.h"
 std::vector<char> externBuffer;
 
 std::wstring FindNeededDLL()
