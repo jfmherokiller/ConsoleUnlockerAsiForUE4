@@ -164,7 +164,6 @@
     <None Include="cpp.hint" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="cool.h" />
     <ClInclude Include="DoubleDragon.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="MemoryModule.h" />

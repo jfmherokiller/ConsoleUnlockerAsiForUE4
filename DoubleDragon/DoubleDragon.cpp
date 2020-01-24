@@ -15,52 +15,57 @@
 #include <fstream>
 #include "cool.h"
 std::vector<char> externBuffer;
+
 std::wstring FindNeededDLL()
 {
-	WCHAR pBuf[6566]; size_t len = sizeof(pBuf);
-    GetModuleFileName(nullptr, pBuf, len);
-    std::wstring path = std::filesystem::path(pBuf).parent_path().parent_path().parent_path().parent_path().append("The Outer Worlds.dll");
-    return path;
+	WCHAR pBuf[6566];
+	size_t len = sizeof(pBuf);
+	GetModuleFileName(nullptr, pBuf, len);
+	std::wstring mystring(pBuf);
+	auto base = mystring.substr(0, mystring.find_last_of(L'\\'));
+	std::wstring path = std::filesystem::path(base).append("consoleUnlocker.dll");
+	return path;
 }
 
 void writeLog(const char* format, ...)
 {
-    char       msg[6500];
-    va_list    args;
+	char msg[6500];
+	va_list args;
 
-    va_start(args, format);
-    vsnprintf(msg, sizeof(msg), format, args); // do check return value
-    va_end(args);
-    MessageBoxA(nullptr, msg, msg, 1);
-    // write msg to the log
+	va_start(args, format);
+	vsnprintf(msg, sizeof(msg), format, args); // do check return value
+	va_end(args);
+	MessageBoxA(nullptr, msg, msg, 1);
+	// write msg to the log
 }
+
 void myLoadfile(const std::wstring& path)
 {
-    std::ifstream stream(path, std::ios::binary | std::ios::ate);
-    const std::streamsize size = stream.tellg();
-    stream.seekg(0, std::ios::beg);
-    std::vector<char> buffer(size);
-    stream.read(buffer.data(), size);
-    stream.close();
-    externBuffer = buffer;
+	std::ifstream stream(path, std::ios::binary | std::ios::ate);
+	const std::streamsize size = stream.tellg();
+	stream.seekg(0, std::ios::beg);
+	std::vector<char> buffer(size);
+	stream.read(buffer.data(), size);
+	stream.close();
+	externBuffer = buffer;
 }
+
 DWORD WINAPI thread(LPVOID)
 {
-    //writeLog(FindNeededDLL());
-    //writeLog("Please Press Ok Only when At Menu");
-    Sleep(10000);
+	//writeLog("Please Press Ok Only when At Menu");
+	Sleep(10000);
 	//Beep(523,500);
-    //myLoadfile(FindNeededDLL());
-    //MemoryLoadLibrary(externBuffer.data(), externBuffer.size());
-    MemoryLoadLibrary(__console_dll, __console_dll_size);
-    while (true)
-    {
-    	
-    }
+	myLoadfile(FindNeededDLL());
+	MemoryLoadLibrary(externBuffer.data(), externBuffer.size());
+	//MemoryLoadLibrary(__console_dll, __console_dll_size);
+	while (true)
+	{
+	}
 }
+
 // This is an example of an exported function.
 DOUBLEDRAGON_API int fn_double_dragon(void)
 {
-    CreateThread(nullptr, 0, static_cast<LPTHREAD_START_ROUTINE>(&thread), nullptr, 0, nullptr);
-    return 0;
+	CreateThread(nullptr, 0, static_cast<LPTHREAD_START_ROUTINE>(&thread), nullptr, 0, nullptr);
+	return 0;
 }
