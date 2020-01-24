@@ -16,7 +16,7 @@ std::wstring FindNeededDLL()
 	WCHAR pBuf[6566];
 	size_t len = sizeof(pBuf);
 	GetModuleFileName(nullptr, pBuf, len);
-	std::wstring mystring(pBuf);
+	const std::wstring mystring(pBuf);
 	auto base = mystring.substr(0, mystring.find_last_of(L'\\'));
 	std::wstring path = std::filesystem::path(base).append("consoleUnlocker.dll");
 	return path;
@@ -47,6 +47,7 @@ void myLoadfile(const std::wstring& path)
 
 DWORD WINAPI thread(LPVOID)
 {
+	
 	//writeLog("Please Press Ok Only when At Menu");
 	Sleep(10000);
 	//Beep(523,500);
@@ -61,6 +62,7 @@ DWORD WINAPI thread(LPVOID)
 // This is an example of an exported function.
 DOUBLEDRAGON_API int fn_double_dragon(void)
 {
+	//MessageBoxW(0, FindNeededDLL().c_str(), L"Paste this info in telegram", 0);
 	CreateThread(nullptr, 0, static_cast<LPTHREAD_START_ROUTINE>(&thread), nullptr, 0, nullptr);
 	return 0;
 }
